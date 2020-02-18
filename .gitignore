@@ -1,0 +1,6 @@
+.vscode
+Pipfile
+Pipfile.lock
+config.py
+*.db
+migrations
