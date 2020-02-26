@@ -10,19 +10,20 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id')),
 )
 
-class User(UserMixin,db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(64), index = True, unique = True)
-    email = db.Column(db.String(120), index = True, unique = True)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    post = db.relationship('Post', backref = 'author', lazy = 'dynamic')
+    post = db.relationship('Post', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(200))
-    last_seen = db.Column(db.DateTime, default = datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     followed = db.relationship(
-        'User', secondary = followers,
-        primaryjoin = (followers.c.follower_id == id),
-        secondaryjoin = (followers.c.followed_id == id),
-        backref = db.backref('followers', lazy = 'dynamic'), lazy = 'dynamic'
+        'User', secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic'
     )
 
     def __repr__(self):
@@ -55,14 +56,14 @@ class User(UserMixin,db.Model):
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)).filter(
                 followers.c.follower_id == self.id)
-        own = Posst.query.filter_by(user_id = self.id)
-        return followed.union(own).filter_by(Post.timestamp.desc())
-        
+        own = Post.query.filter_by(user_id=self.id)
+        return followed.union(own).order_by(Post.timestamp.desc())
+
 
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(240))
-    timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
