@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic'
     )
+    social_id = db.Column(db.String(64), unique=True)
 
     def __repr__(self):
         return "<User {}>".format(self.username)

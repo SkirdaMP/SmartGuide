@@ -21,7 +21,7 @@
     <p>
         {{ form.remember_me() }} {{ form.remember_me.label }}
     </p>
-    <p>{{ form.submit() }}</p>
+    <p>{{ form.submit() }} <input type="submit" name="yandex_enter" value="Yandex LogIn"></p>
     <p>Новый пользователь? <a href="{{ url_for('register') }}">Нажми для регистрации!</a></p>
 </form>
 {% endblock %}

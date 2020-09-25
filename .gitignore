@@ -5,3 +5,6 @@ config.py
 *.db
 migrations
 logs
+.idea/
+__pycache__/
+*/__pycache__/
